@@ -14,11 +14,15 @@ public class PlayerController : MonoBehaviour
 
     public GunController theGun;
 
+    public Transform playerT;
+    public enum Person { Player, Enemy};
+    public Person person = Person.Player;
+
     // Start is called before the first frame update
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody>();
-        mainCamera = FindObjectOfType<Camera>();
+        mainCamera = Camera.main;
     }
 
     // Update is called once per frame
@@ -36,7 +40,14 @@ public class PlayerController : MonoBehaviour
             Vector3 pointToLook = cameraRay.GetPoint(rayLength);
             Debug.DrawLine(cameraRay.origin, pointToLook, Color.blue);
 
-            transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
+            if (person == Person.Player)
+            {
+                transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(transform.rotation.x, playerT.rotation.eulerAngles.y+180, transform.rotation.z);
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
